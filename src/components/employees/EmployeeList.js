@@ -4,7 +4,7 @@ import EmployeeRepository from "../../repositories/EmployeeRepository"
 import "./EmployeeList.css"
 
 
-export const EmployeeListComponent = () => {
+export const EmployeeList = () => {
     const [emps, setEmployees] = useState([])
  // getAll is defined in the employee repository and we are using that to get access to the employees
     //  we are then storing the fetched data in the parameter called data and using the setEmployees function to set the employees variable to the value of data 
