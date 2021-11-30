@@ -13,7 +13,7 @@ export default () => {
             <LocationRoutes />
             <AnimalRoutes />
             <EmployeeRoutes />
-
+            
             <Route path="/search">
                 <SearchResults />
             </Route>
