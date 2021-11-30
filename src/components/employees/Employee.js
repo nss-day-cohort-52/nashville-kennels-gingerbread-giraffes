@@ -5,6 +5,7 @@ import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
+import { get } from "http";
 
 
 export default ({ employee }) => {
@@ -22,6 +23,11 @@ export default ({ employee }) => {
         resolveResource(employee, employeeId, EmployeeRepository.get)
     }, [])
 
+    //Need to match the employee ID to the userId on each animal caretaker object and count the matches to store in a variable to be called in the JSX
+    useEffect(() => {
+        setCount(resource?.animals?.length)
+    }, [resource])
+    
     useEffect(() => {
         if (resource?.employeeLocations?.length > 0) {
             markLocation(resource.employeeLocations[0])
@@ -50,7 +56,7 @@ export default ({ employee }) => {
                     employeeId
                         ? <>
                             <section>
-                                Caring for 0 animals
+                                Caring for {animalCount} animals
                             </section>
                             <section>
                                 Working at unknown location
@@ -58,9 +64,14 @@ export default ({ employee }) => {
                         </>
                         : ""
                 }
-
+{/* below we have a ternary statement saying if the employee property on the current user = true then render a fire button,
+when clicked, delete the employee from the database via the Id and route the user back to the employees page */}
                 {
-                    <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
+                    getCurrentUser().employee && employeeId
+                    ? <button className="btn--fireEmployee" 
+                    onClick={() => {EmployeeRepository.delete(employeeId)}}
+                    ><Link to= {`/employees`}>Fire</Link></button>
+                    : ""
                 }
 
             </section>
@@ -68,3 +79,5 @@ export default ({ employee }) => {
         </article>
     )
 }
+
+
