@@ -67,7 +67,7 @@ export default ({ employee }) => {
 {/* below we have a ternary statement saying if the employee property on the current user = true then render a fire button,
 when clicked, delete the employee from the database via the Id and route the user back to the employees page */}
                 {
-                    getCurrentUser().employee
+                    getCurrentUser().employee && employeeId
                     ? <button className="btn--fireEmployee" 
                     onClick={() => {EmployeeRepository.delete(employeeId)}}
                     ><Link to= {`/employees`}>Fire</Link></button>
