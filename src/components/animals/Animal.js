@@ -10,7 +10,7 @@ import "./AnimalCard.css"
 export const Animal = ({ animal, syncAnimals,
     showTreatmentHistory, owners }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
-    const [isEmployee, setAuth] = useState(false)
+    const [isEmployee, setAuth] = useState(false)  
     const [myOwners, setPeople] = useState([])
     const [allOwners, registerOwners] = useState([])
     const [classes, defineClasses] = useState("card animal")
@@ -24,11 +24,14 @@ export const Animal = ({ animal, syncAnimals,
         resolveResource(animal, animalId, AnimalRepository.get)
     }, [])
 
-    useEffect(() => {
+    useEffect(() => {  
         if (owners) {
             registerOwners(owners)
         }
     }, [owners])
+
+
+
 
     const getPeople = () => {
         return AnimalOwnerRepository
@@ -81,10 +84,16 @@ export const Animal = ({ animal, syncAnimals,
                             <meter min="0" max="100" value={Math.random() * 100} low="25" high="75" optimum="100"></meter>
                         </summary>
 
-                        <section>
+                        <section> 
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                Unknown
+                                {/* create a function based off of owners below*/}
+                                {/* //! AnimalRepository.get()if{animalCaretakers.id
+                                // === animalCaretakers.animalId}
+                                // return ${} */}
+
+                                
+                                Unknown 
                             </span>
 
 
