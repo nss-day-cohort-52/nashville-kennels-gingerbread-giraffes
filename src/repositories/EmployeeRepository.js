@@ -14,7 +14,8 @@ export default {
     },
     async delete(id) {
         return await fetchIt(`${Settings.remoteURL}/users/${id}`, "DELETE")
-    },
+    }
+    ,
     async addEmployee(employee) {
         return await fetchIt(`${Settings.remoteURL}/users`, "POST", JSON.stringify(employee))
     },
@@ -25,3 +26,7 @@ export default {
         return await fetchIt(`${Settings.remoteURL}/users?employee=true&_embed=employeeLocations`)
     }
 }
+
+//async is telling it load all these resources at the same time 
+//Async functions always return a promise. If the return value 
+//of an async function is not explicitly a promise, it will be implicitly wrapped in a promise.
