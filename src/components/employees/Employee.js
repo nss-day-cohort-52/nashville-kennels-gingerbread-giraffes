@@ -5,7 +5,7 @@ import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
-
+import { get } from "http";
 
 
 export default ({ employee }) => {
@@ -23,6 +23,11 @@ export default ({ employee }) => {
         resolveResource(employee, employeeId, EmployeeRepository.get)
     }, [])
 
+    //Need to match the employee ID to the userId on each animal caretaker object and count the matches to store in a variable to be called in the JSX
+    useEffect(() => {
+        setCount(resource?.animals?.length)
+    }, [resource])
+    
     useEffect(() => {
         if (resource?.employeeLocations?.length > 0) {
             markLocation(resource.employeeLocations[0])
@@ -51,7 +56,7 @@ export default ({ employee }) => {
                     employeeId
                         ? <>
                             <section>
-                                Caring for 0 animals
+                                Caring for {animalCount} animals
                             </section>
                             <section>
                                 Working at unknown location

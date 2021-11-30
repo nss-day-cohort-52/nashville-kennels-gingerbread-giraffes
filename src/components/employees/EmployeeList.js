@@ -4,27 +4,25 @@ import EmployeeRepository from "../../repositories/EmployeeRepository"
 import "./EmployeeList.css"
 
 
-export const EmployeeList = () => {
-    const [employees, setEmployees] = useState([])
-    // getAll is defined in the employee repository and we are using that to get access to the employees
+export const EmployeeListComponent = () => {
+    const [emps, setEmployees] = useState([])
+ // getAll is defined in the employee repository and we are using that to get access to the employees
     //  we are then storing the fetched data in the parameter called data and using the setEmployees function to set the employees variable to the value of data 
     useEffect(
         () => {
-            EmployeeRepository.getAll().then(data => setEmployees(data) )
+            EmployeeRepository.getAll().then(data => setEmployees(data))
         }, []
     )
-
+    
     return (
         <>
         <h2 className="employeesHeader">Employees</h2>
             <div className="employees">
                 {
-                    employees.map(
-                        a => 
-                        <Employee key={a.id} employee={a} />)
+                    emps.map(a => <Employee key={a.id} employee={a} />) 
                 }
             </div>
         </>
-    )
-}
+    )} 
+    
 
