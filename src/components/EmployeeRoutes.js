@@ -2,14 +2,14 @@ import React from "react"
 import { Route } from "react-router-dom"
 
 import Employee from "./employees/Employee"
-import EmployeeList from "./employees/EmployeeList"
+import {EmployeeListComponent} from "./employees/EmployeeList"
 import EmployeeForm from "./employees/EmployeeForm"
 
 export default () => {
     return (
         <>
             <Route exact path="/employees">
-                <EmployeeList />
+                <EmployeeListComponent />
             </Route>
             <Route path="/employees/create">
                 <EmployeeForm />
