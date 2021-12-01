@@ -4,13 +4,13 @@ import AnimalRepository from "../../repositories/AnimalRepository";
 import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
 import OwnerRepository from "../../repositories/OwnerRepository";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
-import useResourceResolver from "../../hooks/resource/useResourceResolver"; 
+import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import "./AnimalCard.css"
 
 export const Animal = ({ animal, syncAnimals,
     showTreatmentHistory, owners }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
-    const [isEmployee, setAuth] = useState(false)  
+    const [isEmployee, setAuth] = useState(false)
     const [myOwners, setPeople] = useState([])
     const [myCaretakers, setCaretakers] = useState([])
     const [allCaretakers, assignCaretakers] = useState([])
@@ -19,10 +19,13 @@ export const Animal = ({ animal, syncAnimals,
     const { getCurrentUser } = useSimpleAuth()
     const history = useHistory()
     const { animalId } = useParams()
-    const { resolveResource, resource: currentAnimal } = useResourceResolver() 
+    const { resolveResource, resource: currentAnimal } = useResourceResolver()
     //this is a hook, see useResourceResolver.js, that has useState and useEffect that
     //has placeholders for props being passed or params being passed. It returns resolveResource and resource
     //after being passed through useResourceResolver()
+    const [description, updateDescription] = useState({
+        description: ""
+    }) //defined a variable and setter function for useState and set the initial description value to an empty string to be changed via user input
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
@@ -30,7 +33,7 @@ export const Animal = ({ animal, syncAnimals,
         //animalId is passed to animalRepository.get which returns animal, this is the order of operations for useResourceResolver
     }, [])
 
-    useEffect(() => {  
+    useEffect(() => {
         if (owners) {
             registerOwners(owners)
         }
@@ -45,10 +48,6 @@ export const Animal = ({ animal, syncAnimals,
         AnimalRepository.getCaretakersByAnimal(animalId)
             .then(carers => setCaretakers(carers))
     }, [])
-
-    const setUserId = () => {
-        evt.target.value ===
-    }
 
     const getPeople = () => {
         return AnimalOwnerRepository
@@ -73,11 +72,35 @@ export const Animal = ({ animal, syncAnimals,
     }, [animalId])
 
 
-let newArray = currentAnimal?.animalCaretakers?.map(caretaker => caretaker.user.name).join(", ")
-// going through the currentAnimal and animalCareTaker array and returning the caretaker.user.name array
-let ownerArray = currentAnimal?.animalOwners?.map(owner => owner.user.name).join(", ")
+    let newArray = currentAnimal?.animalCaretakers?.map(caretaker => caretaker.user.name).join(", ")
+    // going through the currentAnimal and animalCareTaker array and returning the caretaker.user.name array
+    let ownerArray = currentAnimal?.animalOwners?.map(owner => owner.user.name).join(", ")
+    //created a saveTreatment function to capture the user input from the textfield and post it to our treatments array in our database 
+    // it also rerenders the animals page once the function is called with history.push
+    const saveTreatment = (evt) => {
+        evt.preventDefault()
 
-return (
+        const savedTreatment = {
+            description: description.description,
+            animalId: currentAnimal?.id,
+            timestamp: new Date().getTime(),
+        }
+
+        const fetchOption = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(savedTreatment)
+        }
+
+        return fetch("http://localhost:8088/treatments", fetchOption)
+            .then(() => {
+                history.push("/animals")
+            })
+    }
+
+    return (
         <>
             <li className={classes}>
                 <div className="card-body">
@@ -106,11 +129,11 @@ return (
                             <meter min="0" max="100" value={Math.random() * 100} low="25" high="75" optimum="100"></meter>
                         </summary>
 
-                        <section> 
+                        <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
                                 {newArray}
-                        
+
                             </span>
 
                             {getCurrentUser().employee
@@ -134,7 +157,7 @@ return (
 
                             <h6>Owners</h6>
                             <span className="small">
-                               {ownerArray}
+                                {ownerArray}
                             </span>
 
                             {
@@ -142,7 +165,7 @@ return (
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
-                                        onChange={() => {}} >
+                                        onChange={() => { }} >
                                         <option value="">
                                             Select {myOwners.length === 1 ? "another" : "an"} owner
                                         </option>
@@ -179,12 +202,32 @@ return (
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
                                     AnimalOwnerRepository
                                         .removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => {}) // Remove animal
-                                        .then(() => {}) // Get all animals
+                                        .then(() => { }) // Remove animal
+                                        .then(() => { }) // Get all animals
                                 }>Discharge</button>
                                 : ""
                         }
-
+                        
+                        {
+                            isEmployee //ternary statement to check if the user is an employee, if they are then render the treatment input instructions, if not display an empty string
+                                ? <label htmlFor="treatmentInstructions">Enter treatment description:</label> : ""
+                            }
+                        {
+                            isEmployee //ternary statement to check if the user is an employee, if they are then render the text area input box
+                                ? 
+                                 <input className="textArea"
+                                    onChange={
+                                        (evt) => {
+                                            //creates a copy of animal state
+                                            const copy = { ...description }
+                                            copy.description = evt.target.value
+                                            updateDescription(copy)
+                                        }
+                                    } 
+                                    >           
+                                </input> 
+                                : ""
+                        }{isEmployee ? <button onClick={saveTreatment}>Submit Treatment</button> : ""}
                     </details>
                 </div>
             </li>
