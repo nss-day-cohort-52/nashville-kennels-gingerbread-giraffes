@@ -100,6 +100,24 @@ export const Animal = ({ animal, syncAnimals,
             })
     }
 
+    const postCaretaker = (event) => {
+        const caretaker = {
+            userId: parseInt(event.target.value),
+            animalId: currentAnimal?.id
+        }
+        const fetchOption = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(caretaker)
+        }
+        return fetch("http://localhost:8088/animalCaretakers", fetchOption)
+            .then(() => {
+                history.push("/animals")
+            })
+    }
+
     return (
         <>
             <li className={classes}>
