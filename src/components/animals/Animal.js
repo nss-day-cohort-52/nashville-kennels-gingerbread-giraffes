@@ -89,6 +89,29 @@ export const Animal = ({ animal, syncAnimals,
                 history.push("/animals")
             })
     }
+    const saveOwner = (evt) => {
+        
+
+        const savedOwner = {
+            // below we are setting the user id to the last index of the array that is returned from the .map which would be the new owner's userId 
+            userId: currentAnimal?.animalOwners?.map(owner => owner.userId).at(-1),
+            animalId: currentAnimal?.id
+         
+        }
+
+        const fetchOption = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(savedOwner)
+        }
+
+        return fetch("http://localhost:8088/animalOwners", fetchOption)
+            .then(() => {
+                history.push("/animals")
+            })
+    }
 
     return (
         <>
@@ -131,13 +154,18 @@ export const Animal = ({ animal, syncAnimals,
                             <span className="small">
                                 {ownerArray}
                             </span>
-
+{/*                            ternary below is checking if only one owner exists and also if the logged in user is an employee
+                            if those conditions are met then it will render the dropdown to select an additional owner, if those conditions are not met then it renders nothing */}
                             {
-                                myOwners.length < 2
+                                myOwners.length < 2 && isEmployee
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
-                                        onChange={() => { }} >
+                                        onChange={(evt) => {
+                                            const copy = {...myOwners}
+                                            copy.userId = evt.target.value
+                                                saveOwner(copy)
+                                         }} >
                                         <option value="">
                                             Select {myOwners.length === 1 ? "another" : "an"} owner
                                         </option>
@@ -148,7 +176,7 @@ export const Animal = ({ animal, syncAnimals,
                                     : null
                             }
 
-
+{/* if detailsOpen and treatments exist on currentAnimal then display treatment history if they are not found then render nothing  */}
                             {
                                 detailsOpen && "treatments" in currentAnimal
                                     ? <div className="small">
@@ -168,7 +196,7 @@ export const Animal = ({ animal, syncAnimals,
                             }
 
                         </section>
-
+{/* ternary below checks whether the logged in user is a customer or employee and if the user is an employee it renders a discharge button */}
                         {
                             isEmployee
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
