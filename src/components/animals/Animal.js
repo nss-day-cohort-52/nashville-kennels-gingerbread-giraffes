@@ -4,37 +4,43 @@ import AnimalRepository from "../../repositories/AnimalRepository";
 import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
 import OwnerRepository from "../../repositories/OwnerRepository";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
-import useResourceResolver from "../../hooks/resource/useResourceResolver";
+import useResourceResolver from "../../hooks/resource/useResourceResolver"; 
 import "./AnimalCard.css"
 
 export const Animal = ({ animal, syncAnimals,
     showTreatmentHistory, owners }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
-    const [isEmployee, setAuth] = useState(false)
+    const [isEmployee, setAuth] = useState(false)  
     const [myOwners, setPeople] = useState([])
     const [allOwners, registerOwners] = useState([])
     const [classes, defineClasses] = useState("card animal")
     const { getCurrentUser } = useSimpleAuth()
     const history = useHistory()
     const { animalId } = useParams()
-    const { resolveResource, resource: currentAnimal } = useResourceResolver()
+    const { resolveResource, resource: currentAnimal } = useResourceResolver() 
+    //this is a hook, see useResourceResolver.js, that has useState and useEffect that
+    //has placeholders for props being passed or params being passed. It returns resolveResource and resource
+    //after being passed through useResourceResolver()
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
         resolveResource(animal, animalId, AnimalRepository.get)
+        //animalId is passed to animalRepository.get which returns animal, this is the order of operations for useResourceResolver
     }, [])
 
-    useEffect(() => {
+    useEffect(() => {  
         if (owners) {
             registerOwners(owners)
         }
     }, [owners])
 
+   
     const getPeople = () => {
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id)
             .then(people => setPeople(people))
     }
+
 
     useEffect(() => {
         getPeople()
@@ -52,7 +58,11 @@ export const Animal = ({ animal, syncAnimals,
         }
     }, [animalId])
 
-    return (
+
+let newArray = currentAnimal?.animalCaretakers?.map(caretaker => caretaker.user.name).join(", ")
+// going through the currentAnimal and animalCareTaker array and returning the caretaker.user.name array
+
+return (
         <>
             <li className={classes}>
                 <div className="card-body">
@@ -81,10 +91,11 @@ export const Animal = ({ animal, syncAnimals,
                             <meter min="0" max="100" value={Math.random() * 100} low="25" high="75" optimum="100"></meter>
                         </summary>
 
-                        <section>
+                        <section> 
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                Unknown
+                                {newArray}
+                        
                             </span>
 
 
