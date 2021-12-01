@@ -4,7 +4,7 @@ import AnimalRepository from "../../repositories/AnimalRepository";
 import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
 import OwnerRepository from "../../repositories/OwnerRepository";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
-import useResourceResolver from "../../hooks/resource/useResourceResolver";
+import useResourceResolver from "../../hooks/resource/useResourceResolver"; 
 import "./AnimalCard.css"
 
 export const Animal = ({ animal, syncAnimals,
@@ -17,11 +17,15 @@ export const Animal = ({ animal, syncAnimals,
     const { getCurrentUser } = useSimpleAuth()
     const history = useHistory()
     const { animalId } = useParams()
-    const { resolveResource, resource: currentAnimal } = useResourceResolver()
+    const { resolveResource, resource: currentAnimal } = useResourceResolver() 
+    //this is a hook, see useResourceResolver.js, that has useState and useEffect that
+    //has placeholders for props being passed or params being passed. It returns resolveResource and resource
+    //after being passed through useResourceResolver()
 
     useEffect(() => {
         setAuth(getCurrentUser().employee)
         resolveResource(animal, animalId, AnimalRepository.get)
+        //animalId is passed to animalRepository.get which returns animal, this is the order of operations for useResourceResolver
     }, [])
 
     useEffect(() => {  
@@ -30,14 +34,13 @@ export const Animal = ({ animal, syncAnimals,
         }
     }, [owners])
 
-
-
-
+   
     const getPeople = () => {
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id)
             .then(people => setPeople(people))
     }
+
 
     useEffect(() => {
         getPeople()
@@ -55,7 +58,20 @@ export const Animal = ({ animal, syncAnimals,
         }
     }, [animalId])
 
-    return (
+
+let newArray = currentAnimal?.animalCaretakers?.map(caretaker => caretaker.user.name).join(", ")
+ 
+
+
+
+// going through the currentAnimal and animalCareTaker array and returning the caretaker.user.name array
+//! how does this have access of caretaker.user.name? Is this going through caretakers, then going to user data
+//!then going to name?    
+
+//! is currentAnimal a prop? 
+
+//! what is being passed into the useResourceResolver to get the data needed
+return (
         <>
             <li className={classes}>
                 <div className="card-body">
@@ -87,13 +103,8 @@ export const Animal = ({ animal, syncAnimals,
                         <section> 
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                {/* create a function based off of owners below*/}
-                                {/* //! AnimalRepository.get()if{animalCaretakers.id
-                                // === animalCaretakers.animalId}
-                                // return ${} */}
-
-                                
-                                Unknown 
+                                {newArray}
+                        
                             </span>
 
 
