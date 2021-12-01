@@ -14,7 +14,7 @@ export default ({ employee }) => {
     const [classes, defineClasses] = useState("card employee")
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
-    const { resolveResource, resource } = useResourceResolver()
+    const { resolveResource, resource } = useResourceResolver() //
 
     useEffect(() => {
         if (employeeId) {

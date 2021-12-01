@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Employee from "./Employee"
-import EmployeeRepository from "../../repositories/EmployeeRepository"
+import EmployeeRepository from "../../repositories/EmployeeRepository" //all the functions under default from EmployeeRepository will be available for use on the page
 import "./EmployeeList.css"
 
 

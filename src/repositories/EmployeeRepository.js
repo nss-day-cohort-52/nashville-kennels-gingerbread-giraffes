@@ -30,4 +30,3 @@ export default {
 
 //async is telling it load all these resources at the same time 
 //Async functions always return a promise. If the return value 
-//of an async function is not explicitly a promise, it will be implicitly wrapped in a promise.
