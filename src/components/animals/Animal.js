@@ -12,6 +12,8 @@ export const Animal = ({ animal, syncAnimals,
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)  
     const [myOwners, setPeople] = useState([])
+    const [myCaretakers, setCaretakers] = useState([])
+    const [allCaretakers, assignCaretakers] = useState([])
     const [allOwners, registerOwners] = useState([])
     const [classes, defineClasses] = useState("card animal")
     const { getCurrentUser } = useSimpleAuth()
@@ -32,15 +34,27 @@ export const Animal = ({ animal, syncAnimals,
         if (owners) {
             registerOwners(owners)
         }
-    }, [owners])
+    }, [owners]) 
 
-   
+    useEffect(() => {
+        AnimalRepository.getCaretakers()
+            .then(data => assignCaretakers(data))
+    }, [])
+
+    useEffect(() => {
+        AnimalRepository.getCaretakersByAnimal(animalId)
+            .then(carers => setCaretakers(carers))
+    }, [])
+
+    const setUserId = () => {
+        evt.target.value ===
+    }
+
     const getPeople = () => {
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id)
             .then(people => setPeople(people))
     }
-
 
     useEffect(() => {
         getPeople()
@@ -99,6 +113,24 @@ return (
                         
                             </span>
 
+                            {getCurrentUser().employee
+                            ?
+                            
+                                myCaretakers.length < 2
+                                    ? <select defaultValue=""
+                                        name="caretaker"
+                                        className="form-control small"
+                                        onChange={() => {}} >
+                                        <option value="">
+                                            Select {myCaretakers.length === 1 ? "a" : "another"} caretaker
+                                        </option>
+                                        {
+                                            allCaretakers.map(c => <option key={c.id} value={c.id}>{c.user.name}</option>)
+                                        }
+                                    </select>
+                                    : null
+                            
+                            : ""}
 
                             <h6>Owners</h6>
                             <span className="small">
