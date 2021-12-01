@@ -60,17 +60,8 @@ export const Animal = ({ animal, syncAnimals,
 
 
 let newArray = currentAnimal?.animalCaretakers?.map(caretaker => caretaker.user.name).join(", ")
- 
-
-
-
 // going through the currentAnimal and animalCareTaker array and returning the caretaker.user.name array
-//! how does this have access of caretaker.user.name? Is this going through caretakers, then going to user data
-//!then going to name?    
 
-//! is currentAnimal a prop? 
-
-//! what is being passed into the useResourceResolver to get the data needed
 return (
         <>
             <li className={classes}>
