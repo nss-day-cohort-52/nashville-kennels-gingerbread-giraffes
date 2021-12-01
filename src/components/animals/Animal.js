@@ -61,6 +61,7 @@ export const Animal = ({ animal, syncAnimals,
 
 let newArray = currentAnimal?.animalCaretakers?.map(caretaker => caretaker.user.name).join(", ")
 // going through the currentAnimal and animalCareTaker array and returning the caretaker.user.name array
+let ownerArray = currentAnimal?.animalOwners?.map(owner => owner.user.name).join(", ")
 
 return (
         <>
@@ -101,7 +102,7 @@ return (
 
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                               {ownerArray}
                             </span>
 
                             {
