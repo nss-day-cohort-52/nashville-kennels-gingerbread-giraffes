@@ -31,14 +31,7 @@ export default {
     async getCaretakersByAnimal (animalId) {
         const e = await fetch(`${Settings.remoteURL}/animalCaretakers?animalId=${animalId}&_expand=user`)
         return await e.json()
-    },
-    async addCaretaker(newCaretaker) {
-        return await fetchIt(
-            `${Settings.remoteURL}/animalCaretakers`,
-            "POST",
-            JSON.stringify(newAnimal)
-        )
-    },
+    },  
     async searchByName(query) {
         return await fetchIt(`${Settings.remoteURL}/animals?_expand=employee&_sort=employee.id&_embed=treatments&_expand=location&name_like=${query}`)
     },
