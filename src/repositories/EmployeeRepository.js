@@ -23,6 +23,10 @@ export default {
     async assignEmployee(rel) {
         return await fetchIt(`${Settings.remoteURL}/employeeLocations`, "POST", JSON.stringify(rel))
     },
+    async getEmployeesByLocation (locationId) {
+        const e = await fetch(`${Settings.remoteURL}/employeeLocations?locationId=${locationId}&_expand=user`)
+        return await e.json()
+    },
     async getAll() {
         return await fetchIt(`${Settings.remoteURL}/users?employee=true&_embed=employeeLocations`)
     }
