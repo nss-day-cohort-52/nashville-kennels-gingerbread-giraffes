@@ -164,7 +164,9 @@ export const Animal = ({ animal, syncAnimals,
                                     ? <select defaultValue=""
                                         name="caretaker"
                                         className="form-control small"
+
                                         onChange={(event) => { setCaretaker(event) }} >
+
                                         <option value="">
                                             Select {myCaretakers.length === 1 ? "a" : "another"} caretaker
                                         </option>
@@ -227,9 +229,10 @@ export const Animal = ({ animal, syncAnimals,
                                     AnimalOwnerRepository.removeOwnersAndCaretakers(currentAnimal.id)
                                         .then(() => { AnimalRepository.delete(currentAnimal.id); })
                                         .then(() => { syncAnimals() })
+
                                 }}> Discharge</button>
                                 : ""
-                        }
+                               }
 
 
                         {
@@ -247,14 +250,16 @@ export const Animal = ({ animal, syncAnimals,
                                             copy.description = evt.target.value
                                             updateDescription(copy)
                                         }
+
                                     }
-                                >
-                                </input>
-                                : ""
-                        }{isEmployee ? <button onClick={saveTreatment}>Submit Treatment</button> : ""}
-                    </details>
-                </div>
-            </li>
+                                }
+                            >
+                            </input>
+                            : ""
+                    }{isEmployee ? <button onClick={saveTreatment}>Submit Treatment</button> : ""}
+                </details>
+            </div>
+        </li>
         </>
     )
 }
