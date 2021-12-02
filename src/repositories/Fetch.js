@@ -2,7 +2,7 @@ export const fetchIt = (url, method = "GET", body = null) => {
     let options = {
         "method": method,
         "headers": {}
-    }
+    } //this exporting the fetch steps for data 
 
     switch (method) {
         case "POST":
