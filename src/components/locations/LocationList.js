@@ -8,7 +8,7 @@ export const LocationList = () => {
     const [ locations, updateLocations ] = useState([])
 
     useEffect(() => {
-        LocationRepository.getAll()
+        LocationRepository.getAll().then(loc => updateLocations(loc))
     }, [])
 
     return (
