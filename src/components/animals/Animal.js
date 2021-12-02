@@ -7,7 +7,7 @@ import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import "./AnimalCard.css"
 import EmployeeRepository from "../../repositories/EmployeeRepository";
-
+//below is where we are getting all of the animal card information
 export const Animal = ({ animal, syncAnimals,
     showTreatmentHistory, owners, caretakers }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
@@ -33,6 +33,9 @@ export const Animal = ({ animal, syncAnimals,
         resolveResource(animal, animalId, AnimalRepository.get)
         //animalId is passed to animalRepository.get which returns animal, this is the order of operations for useResourceResolver
     }, [])
+    useEffect(() => {
+        resolveResource(animal, animalId, AnimalRepository.get)
+    }, [animal])
 
     useEffect(() => {
         if (owners) {
@@ -105,44 +108,17 @@ export const Animal = ({ animal, syncAnimals,
             })
     }
     const saveOwner = (event) => {
-
-
-        const savedOwner = {
-            userId: parseInt(event.target.value),
-            animalId: currentAnimal?.id
-
-        }
-
-        const fetchOption = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(savedOwner)
-        }
-
-        return fetch("http://localhost:8088/animalOwners", fetchOption)
-            .then(() => {
-                history.push("/animals")
-            })
+        AnimalOwnerRepository.assignOwner(
+            currentAnimal?.id,
+            parseInt(event.target.value),
+        ).then(syncAnimals)
     }
-
-    const postCaretaker = (event) => {
-        const caretaker = {
-            userId: parseInt(event.target.value),
-            animalId: currentAnimal?.id
-        }
-        const fetchOption = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(caretaker)
-        }
-        return fetch("http://localhost:8088/animalCaretakers", fetchOption)
-            .then(() => {
-                history.push("/animals")
-            })
+    const setCaretaker = (event) => {
+        AnimalRepository
+            .assignCaretaker(
+                currentAnimal?.id,
+                parseInt(event.target.value)
+            ).then(syncAnimals)
     }
 
     return (
@@ -188,7 +164,9 @@ export const Animal = ({ animal, syncAnimals,
                                     ? <select defaultValue=""
                                         name="caretaker"
                                         className="form-control small"
-                                        onChange={(event) => { postCaretaker(event) }} >
+
+                                        onChange={(event) => { setCaretaker(event) }} >
+
                                         <option value="">
                                             Select {myCaretakers.length === 1 ? "a" : "another"} caretaker
                                         </option>
@@ -249,27 +227,30 @@ export const Animal = ({ animal, syncAnimals,
                             isEmployee
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() => {
                                     AnimalOwnerRepository.removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => { AnimalRepository.delete(currentAnimal.id);})
-                                        .then(() => { history.push("/animals");})
+                                        .then(() => { AnimalRepository.delete(currentAnimal.id); })
+                                        .then(() => { syncAnimals() })
+
                                 }}> Discharge</button>
                                 : ""
                                }
 
 
-                    {
-                        isEmployee //ternary statement to check if the user is an employee, if they are then render the treatment input instructions, if not display an empty string
-                            ? <label htmlFor="treatmentInstructions">Enter treatment description:</label> : ""
-                    }
-                    {
-                        isEmployee //ternary statement to check if the user is an employee, if they are then render the text area input box
-                            ?
-                            <input className="textArea"
-                                onChange={
-                                    (evt) => {
-                                        //creates a copy of animal state
-                                        const copy = { ...description }
-                                        copy.description = evt.target.value
-                                        updateDescription(copy)
+                        {
+                            isEmployee //ternary statement to check if the user is an employee, if they are then render the treatment input instructions, if not display an empty string
+                                ? <label htmlFor="treatmentInstructions">Enter treatment description:</label> : ""
+                        }
+                        {
+                            isEmployee //ternary statement to check if the user is an employee, if they are then render the text area input box
+                                ?
+                                <input className="textArea"
+                                    onChange={
+                                        (evt) => {
+                                            //creates a copy of animal state
+                                            const copy = { ...description }
+                                            copy.description = evt.target.value
+                                            updateDescription(copy)
+                                        }
+
                                     }
                                 }
                             >
