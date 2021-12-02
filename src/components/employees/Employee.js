@@ -13,7 +13,7 @@ import LocationDetail from "../locations/LocationDetail";
 
 export default ({ employee }) => {
     const [animalCount, setCount] = useState(0)
-    const [location, markLocation] = useState({ name: "" })
+    const [location, markLocation] = useState({name:""})
     const [classes, defineClasses] = useState("card employee")
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
@@ -39,7 +39,7 @@ export default ({ employee }) => {
     
     useEffect(() => {
         if (resource?.employeeLocations?.length > 0) {
-            markLocation(resource.employeeLocations[0])
+            markLocation(resource?.employeeLocations[0])
         }
     }, [resource])
     
@@ -88,8 +88,8 @@ export default ({ employee }) => {
                             <section>
                                 Caring for {animalCount} animals
                             </section>
-                            <section>
-                                Working at {location.name} location
+                            <section>   
+                                Working at {location.location?.name} location
                             </section>
                         </>
                         : ""
