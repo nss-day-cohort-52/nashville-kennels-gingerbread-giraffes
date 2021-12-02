@@ -6,12 +6,15 @@ import OwnerRepository from "../../repositories/OwnerRepository";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import "./AnimalCard.css"
+import EmployeeRepository from "../../repositories/EmployeeRepository";
 
 export const Animal = ({ animal, syncAnimals,
-    showTreatmentHistory, owners }) => {
+    showTreatmentHistory, owners, caretakers }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
     const [myOwners, setPeople] = useState([])
+    const [myCaretakers, setCaretakers] = useState([])
+    const [allCaretakers, assignCaretakers] = useState([])
     const [allOwners, registerOwners] = useState([])
     const [classes, defineClasses] = useState("card animal")
     const { getCurrentUser } = useSimpleAuth()
@@ -35,15 +38,27 @@ export const Animal = ({ animal, syncAnimals,
         if (owners) {
             registerOwners(owners)
         }
-    }, [owners])
+    }, [owners]) 
 
+    useEffect(() => {
+        EmployeeRepository.getAll()
+            .then(data => assignCaretakers(data))
+    }, [])
+
+    const getEmps = () => {
+        return AnimalRepository.getCaretakersByAnimal(animalId)
+        .then(carers => setCaretakers(carers))
+    }
+
+    useEffect(() => {
+        getEmps()
+    }, [currentAnimal])
 
     const getPeople = () => {
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id)
             .then(people => setPeople(people))
     }
-
 
     useEffect(() => {
         getPeople()
@@ -112,6 +127,24 @@ export const Animal = ({ animal, syncAnimals,
             })
     }
 
+    const postCaretaker = (event) => {
+        const caretaker = {
+            userId: parseInt(event.target.value),
+            animalId: currentAnimal?.id
+        }
+        const fetchOption = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(caretaker)
+        }
+        return fetch("http://localhost:8088/animalCaretakers", fetchOption)
+            .then(() => {
+                history.push("/animals")
+            })
+    }
+
     return (
         <>
             <li className={classes}>
@@ -148,6 +181,24 @@ export const Animal = ({ animal, syncAnimals,
 
                             </span>
 
+                            {getCurrentUser().employee
+                            ?
+                            
+                                myCaretakers.length < 2
+                                    ? <select defaultValue=""
+                                        name="caretaker"
+                                        className="form-control small"
+                                        onChange={(event) => {postCaretaker(event)}} >
+                                        <option value="">
+                                            Select {myCaretakers.length === 1 ? "a" : "another"} caretaker
+                                        </option>
+                                        {
+                                            allCaretakers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)
+                                        }
+                                    </select>
+                                    : null
+                            
+                            : ""}
 
                             <h6>Owners</h6>
                             <span className="small">

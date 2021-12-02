@@ -48,7 +48,6 @@ export const AnimalListComponent = (props) => {
         return () => window.removeEventListener("keyup", handler)
     }, [toggleDialog, modalIsOpen])
 
-
     return (
         <>
             <AnimalDialog toggleDialog={toggleDialog} animal={currentAnimal} />
@@ -69,6 +68,17 @@ export const AnimalListComponent = (props) => {
 
             <ul className="animals">
                 {
+                    getCurrentUser().employee
+                    ?
+                    animals.map(anml =>
+                        <Animal key={`animal--${anml.id}`} animal={anml}
+                            animalOwners={animalOwners}
+                            owners={owners}
+                            syncAnimals={syncAnimals}
+                            setAnimalOwners={setAnimalOwners}
+                            showTreatmentHistory={showTreatmentHistory}
+                        />)
+                    :
                     animals.map(anml =>
                         <Animal key={`animal--${anml.id}`} animal={anml}
                             animalOwners={animalOwners}
