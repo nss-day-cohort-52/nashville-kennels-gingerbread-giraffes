@@ -249,11 +249,7 @@ export const Animal = ({ animal, syncAnimals,
                                             const copy = { ...description }
                                             copy.description = evt.target.value
                                             updateDescription(copy)
-                                        }
-
-                                    }
-                                }
-                            >
+                                        } } >
                             </input>
                             : ""
                     }{isEmployee ? <button onClick={saveTreatment}>Submit Treatment</button> : ""}
