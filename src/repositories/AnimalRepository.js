@@ -1,6 +1,7 @@
 import Settings from "./Settings"
 import { fetchIt } from "./Fetch"
 import OwnerRepository from "./OwnerRepository"
+import EmployeeRepository from "./EmployeeRepository"
 
 const expandAnimalUser = (animal, users) => {
     animal.animalOwners = animal.animalOwners.map(ao => {
@@ -24,9 +25,6 @@ export default {
                 animal = expandAnimalUser(animal, users)
                 return animal
             })
-    },
-    async getCaretakers() {
-        return await fetchIt(`${Settings.remoteURL}/animalCaretakers?&_expand=user`)
     },
     async getCaretakersByAnimal (animalId) {
         const e = await fetch(`${Settings.remoteURL}/animalCaretakers?animalId=${animalId}&_expand=user`)

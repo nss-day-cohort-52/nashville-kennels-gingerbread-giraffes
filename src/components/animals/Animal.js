@@ -6,9 +6,10 @@ import OwnerRepository from "../../repositories/OwnerRepository";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import "./AnimalCard.css"
+import EmployeeRepository from "../../repositories/EmployeeRepository";
 
 export const Animal = ({ animal, syncAnimals,
-    showTreatmentHistory, owners }) => {
+    showTreatmentHistory, owners, caretakers }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
     const [myOwners, setPeople] = useState([])
@@ -40,14 +41,18 @@ export const Animal = ({ animal, syncAnimals,
     }, [owners]) 
 
     useEffect(() => {
-        AnimalRepository.getCaretakers()
+        EmployeeRepository.getAll()
             .then(data => assignCaretakers(data))
     }, [])
 
+    const getEmps = () => {
+        return AnimalRepository.getCaretakersByAnimal(animalId)
+        .then(carers => setCaretakers(carers))
+    }
+
     useEffect(() => {
-        AnimalRepository.getCaretakersByAnimal(animalId)
-            .then(carers => setCaretakers(carers))
-    }, [])
+        getEmps()
+    }, [currentAnimal])
 
     const getPeople = () => {
         return AnimalOwnerRepository
@@ -161,12 +166,12 @@ export const Animal = ({ animal, syncAnimals,
                                     ? <select defaultValue=""
                                         name="caretaker"
                                         className="form-control small"
-                                        onChange={() => {}} >
+                                        onChange={(event) => {postCaretaker(event)}} >
                                         <option value="">
                                             Select {myCaretakers.length === 1 ? "a" : "another"} caretaker
                                         </option>
                                         {
-                                            allCaretakers.map(c => <option key={c.id} value={c.id}>{c.user.name}</option>)
+                                            allCaretakers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)
                                         }
                                     </select>
                                     : null
