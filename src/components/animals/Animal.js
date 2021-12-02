@@ -93,9 +93,6 @@ export const Animal = ({ animal, syncAnimals,
 
 
         const savedOwner = {
-            // below we are setting the user id to the last index of the array that is returned from the .map which would be the new owner's userId 
-
-            // userId: currentAnimal?.animalOwners?.map(owner => owner.userId).at(0),
             userId: parseInt(event.target.value),
             animalId: currentAnimal?.id
 
