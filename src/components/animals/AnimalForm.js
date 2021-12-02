@@ -1,21 +1,38 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
+import LocationRepository from "../../repositories/LocationRepository";
+import EmployeeRepository from "../../repositories/EmployeeRepository";
+import { useHistory } from "react-router"
 
 
 export default (props) => {
     const [animalName, setName] = useState("")
     const [breed, setBreed] = useState("")
     const [animals, setAnimals] = useState([])
+    const [locations, setLocations] = useState([])
     const [employees, setEmployees] = useState([])
     const [employeeId, setEmployeeId] = useState(0)
+    const [locationId, setLocationId] = useState(0)
     const [saveEnabled, setEnabled] = useState(false)
+    const history = useHistory()
+
+    useEffect(() => {
+        LocationRepository.getAll().then(loc => setLocations(loc))
+    }, [])
+
+    useEffect(() => {
+        EmployeeRepository.getEmployeesByLocation(locationId).then(emp => setEmployees(emp))
+    }, [locationId])
 
     const constructNewAnimal = evt => {
         evt.preventDefault()
+        const locId = parseInt(locationId)
         const eId = parseInt(employeeId)
-
-        if (eId === 0) {
+        if (locId === 0) {
+            window.alert("Please select a location")
+        }
+        else if (eId === 0) {
             window.alert("Please select a caretaker")
         } else {
             const emp = employees.find(e => e.id === eId)
@@ -23,12 +40,12 @@ export default (props) => {
                 name: animalName,
                 breed: breed,
                 employeeId: eId,
-                locationId: parseInt(emp.locationId)
+                locationId: locId
             }
 
             AnimalRepository.addAnimal(animal)
                 .then(() => setEnabled(true))
-                .then(() => props.history.push("/animals"))
+                .then(() => history.push("/animals"))
         }
     }
 
@@ -59,18 +76,35 @@ export default (props) => {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="employee">Make appointment with caretaker</label>
+                <label htmlFor="location">Choose the location you would like to use</label>
+                <select
+                    defaultValue=""
+                    name="location"
+                    id="locationId"
+                    className="form-control"
+                    onChange={event => setLocationId(event.target.value)}
+                >
+                    <option value="">Select a location</option>
+                    {locations.map(loc => (
+                        <option key={loc.id} id={loc.id} value={loc.id}>
+                            {loc.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <div className="form-group">
+                <label htmlFor="employee">Make an appointment with a caretaker</label>
                 <select
                     defaultValue=""
                     name="employee"
                     id="employeeId"
                     className="form-control"
-                    onChange={e => setEmployeeId(e.target.value)}
+                    onChange={event => setEmployeeId(event.target.value)}
                 >
                     <option value="">Select an employee</option>
                     {employees.map(e => (
-                        <option key={e.id} id={e.id} value={e.id}>
-                            {e.name}
+                        <option key={e.user.id} id={e.user.id} value={e.user.id}>
+                            {e.user.name}
                         </option>
                     ))}
                 </select>
