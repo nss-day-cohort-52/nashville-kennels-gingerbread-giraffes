@@ -32,29 +32,17 @@ export const Animal = ({ animal, syncAnimals,
     }, [])
 
     useEffect(() => {
-<<<<<<< HEAD
-        if (owners) { //!if there is a parameter 
-            registerOwners(owners)  //!then place the value of parameter as registeredOwners that will fill the allOwners variable
-=======
         if (owners) {
             registerOwners(owners)
->>>>>>> main
         }
     }, [owners]) //! the useEffect will update anytime owners is changed
 
 
-<<<<<<< HEAD
-    const getPeople = () => { //!creating a function
-        return AnimalOwnerRepository  //! returning .getOwnersByAnimals method from AnimalOwnerRepository
-            .getOwnersByAnimal(currentAnimal.id) //!getting user data based off id of current animal
-            .then(people => setPeople(people)) //confused how this logic is being passed down...can we code this out
-=======
 
     const getPeople = () => {
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id)
             .then(people => setPeople(people))
->>>>>>> main
     }
 
 
@@ -76,11 +64,6 @@ export const Animal = ({ animal, syncAnimals,
 
 
     let newArray = currentAnimal?.animalCaretakers?.map(caretaker => caretaker.user.name).join(", ")
-<<<<<<< HEAD
-    // // going through the currentAnimal and animalCareTaker array and returning the caretaker.user.name array
-    let ownerArray = currentAnimal?.animalOwners?.map(owner => owner.user.name).join(", ")
-
-=======
     // going through the currentAnimal and animalCareTaker array and returning the caretaker.user.name array
     let ownerArray = currentAnimal?.animalOwners?.map(owner => owner.user.name).join(", ")
     //created a saveTreatment function to capture the user input from the textfield and post it to our treatments array in our database 
@@ -108,7 +91,6 @@ export const Animal = ({ animal, syncAnimals,
             })
     }
 
->>>>>>> main
     return (
         <>
             <li className={classes}>
@@ -190,34 +172,12 @@ export const Animal = ({ animal, syncAnimals,
 
                         {
                             isEmployee
-<<<<<<< HEAD
-                                ? <button className="btn btn-warning mt-3 form-control small"
-
-                                    onClick={() => {
-                                        AnimalOwnerRepository.removeOwnersAndCaretakers(currentAnimal.id)
-                                            .then(() => { AnimalRepository.delete(currentAnimal.id); }
-                                            //do a synchronous anonomous function to get all animals reference animalList.js maybe syc animals???
-                                            ); 
-
-                                        
-                                            // .then (()=>{)}
-
-                                    }
-
-                                        // .then(() => {}) // Remove animal from animal array
-                                        //.then(animal => AnimalRepository.delete(animal))  
-                                        // .then(AnimalRepository.delete(currentAnimal.id))   //!getting 404 erro    
-
-                                        // Get all animals that are in animal array.
-                                    }>Discharge</button>
-=======
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
                                     AnimalOwnerRepository
                                         .removeOwnersAndCaretakers(currentAnimal.id)
                                         .then(() => { }) // Remove animal
                                         .then(() => { }) // Get all animals
                                 }>Discharge</button>
->>>>>>> main
                                 : ""
                         }
                         
