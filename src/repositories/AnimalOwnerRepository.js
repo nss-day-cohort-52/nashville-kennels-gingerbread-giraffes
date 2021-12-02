@@ -20,19 +20,20 @@ export default {
         })
         return await e.json()
     },
-    async removeOwnersAndCaretakers(animalId) {
-        return AnimalRepository.get(animalId)
-            .then(animal => {
+    async removeOwnersAndCaretakers(animalId) { //creating a function
+        return AnimalRepository.get(animalId) // returning data from animalRepository.get
+            .then(animal => { 
                 const ownerDeletes = animal.animalOwners.map(
                     ao => fetchIt(`${Settings.remoteURL}/animalOwners/${ao.id}`,"DELETE")
                 )
-                const employeeDeletes = animal.animalCaretakers.map(
+                const employeeDeletes = animal.animalCaretakers.map( 
                     c => fetchIt(`${Settings.remoteURL}/animalCaretakers/${c.id}`, "DELETE")
                 )
                 return Promise.all(ownerDeletes)
                     .then(() => Promise.all(employeeDeletes))
             })
     },
+    
     async getOwnersByAnimal (animalId) {
         const e = await fetch(`${Settings.remoteURL}/animalOwners?animalId=${animalId}&_expand=user`)
         return await e.json()

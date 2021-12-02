@@ -18,19 +18,21 @@ const expandAnimalUser = (animal, users) => {
 
 export default {
     async get(id) {
-        const users = await OwnerRepository.getAll()
+        const users = await OwnerRepository.getAll() // users equals getAll function  that returns users
         return await fetchIt(`${Settings.remoteURL}/animals/${id}?_embed=animalOwners&_embed=treatments&_embed=animalCaretakers`)
             .then(animal => {
-                animal = expandAnimalUser(animal, users)
-                return animal
+                animal = expandAnimalUser(animal, users) //! is this getting all the data from above fetch?
+                return animal  //anonomous name- function defition that doesnt have a name or reference
             })
     },
     async searchByName(query) {
         return await fetchIt(`${Settings.remoteURL}/animals?_expand=employee&_sort=employee.id&_embed=treatments&_expand=location&name_like=${query}`)
     },
+
     async delete(id) {
-        return await fetchIt(`${Settings.remoteURL}/animals/${id}`, "DELETE")
+        return await fetchIt(`${Settings.remoteURL}/animals/${id}`, "DELETE")   
     },
+
     async getAll() {
         const users = await OwnerRepository.getAll()
         const animals = await fetchIt(`${Settings.remoteURL}/animals?_embed=animalOwners&_embed=treatments&_embed=animalCaretakers`)
