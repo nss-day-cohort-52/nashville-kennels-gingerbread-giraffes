@@ -104,6 +104,28 @@ export const Animal = ({ animal, syncAnimals,
                 history.push("/animals")
             })
     }
+    const saveOwner = (event) => {
+
+
+        const savedOwner = {
+            userId: parseInt(event.target.value),
+            animalId: currentAnimal?.id
+
+        }
+
+        const fetchOption = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(savedOwner)
+        }
+
+        return fetch("http://localhost:8088/animalOwners", fetchOption)
+            .then(() => {
+                history.push("/animals")
+            })
+    }
 
     const postCaretaker = (event) => {
         const caretaker = {
@@ -182,13 +204,16 @@ export const Animal = ({ animal, syncAnimals,
                             <span className="small">
                                 {ownerArray}
                             </span>
-
+                            {/*                            ternary below is checking if only one owner exists and also if the logged in user is an employee
+                            if those conditions are met then it will render the dropdown to select an additional owner, if those conditions are not met then it renders nothing */}
                             {
-                                myOwners.length < 2
+                                myOwners.length < 2 && isEmployee
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
-                                        onChange={() => { }} >
+                                        onChange={(event) => {
+                                            saveOwner(event)
+                                        }} >
                                         <option value="">
                                             Select {myOwners.length === 1 ? "another" : "an"} owner
                                         </option>
@@ -199,7 +224,7 @@ export const Animal = ({ animal, syncAnimals,
                                     : null
                             }
 
-
+                            {/* if detailsOpen and treatments exist on currentAnimal then display treatment history if they are not found then render nothing  */}
                             {
                                 detailsOpen && "treatments" in currentAnimal
                                     ? <div className="small">
@@ -219,7 +244,7 @@ export const Animal = ({ animal, syncAnimals,
                             }
 
                         </section>
-
+                        {/* ternary below checks whether the logged in user is a customer or employee and if the user is an employee it renders a discharge button */}
                         {
                             isEmployee
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
@@ -230,15 +255,15 @@ export const Animal = ({ animal, syncAnimals,
                                 }>Discharge</button>
                                 : ""
                         }
-                        
+
                         {
                             isEmployee //ternary statement to check if the user is an employee, if they are then render the treatment input instructions, if not display an empty string
                                 ? <label htmlFor="treatmentInstructions">Enter treatment description:</label> : ""
-                            }
+                        }
                         {
                             isEmployee //ternary statement to check if the user is an employee, if they are then render the text area input box
-                                ? 
-                                 <input className="textArea"
+                                ?
+                                <input className="textArea"
                                     onChange={
                                         (evt) => {
                                             //creates a copy of animal state
@@ -246,9 +271,9 @@ export const Animal = ({ animal, syncAnimals,
                                             copy.description = evt.target.value
                                             updateDescription(copy)
                                         }
-                                    } 
-                                    >           
-                                </input> 
+                                    }
+                                >
+                                </input>
                                 : ""
                         }{isEmployee ? <button onClick={saveTreatment}>Submit Treatment</button> : ""}
                     </details>
