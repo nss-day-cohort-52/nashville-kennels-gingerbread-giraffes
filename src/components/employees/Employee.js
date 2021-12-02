@@ -20,7 +20,7 @@ export default ({ employee }) => {
     const { resolveResource, resource } = useResourceResolver() //
     const [allLocations, saveLocations] = useState([])
     const history = useHistory()
-
+   
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
@@ -89,7 +89,7 @@ export default ({ employee }) => {
                                 Caring for {animalCount} animals
                             </section>
                             <section>   
-                                Working at {location.location?.name} location
+                                Working at -- location
                             </section>
                         </>
                         : ""
