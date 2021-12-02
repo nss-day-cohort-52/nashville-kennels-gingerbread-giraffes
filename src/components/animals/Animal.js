@@ -38,7 +38,7 @@ export const Animal = ({ animal, syncAnimals,
         if (owners) {
             registerOwners(owners)
         }
-    }, [owners]) 
+    }, [owners])
 
     useEffect(() => {
         EmployeeRepository.getAll()
@@ -47,7 +47,7 @@ export const Animal = ({ animal, syncAnimals,
 
     const getEmps = () => {
         return AnimalRepository.getCaretakersByAnimal(animalId)
-        .then(carers => setCaretakers(carers))
+            .then(carers => setCaretakers(carers))
     }
 
     useEffect(() => {
@@ -182,13 +182,13 @@ export const Animal = ({ animal, syncAnimals,
                             </span>
 
                             {getCurrentUser().employee
-                            ?
-                            
+                                ?
+
                                 myCaretakers.length < 2
                                     ? <select defaultValue=""
                                         name="caretaker"
                                         className="form-control small"
-                                        onChange={(event) => {postCaretaker(event)}} >
+                                        onChange={(event) => { postCaretaker(event) }} >
                                         <option value="">
                                             Select {myCaretakers.length === 1 ? "a" : "another"} caretaker
                                         </option>
@@ -197,8 +197,8 @@ export const Animal = ({ animal, syncAnimals,
                                         }
                                     </select>
                                     : null
-                            
-                            : ""}
+
+                                : ""}
 
                             <h6>Owners</h6>
                             <span className="small">
@@ -247,38 +247,38 @@ export const Animal = ({ animal, syncAnimals,
                         {/* ternary below checks whether the logged in user is a customer or employee and if the user is an employee it renders a discharge button */}
                         {
                             isEmployee
-                                ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
-                                    AnimalOwnerRepository
-                                        .removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => { }) // Remove animal
-                                        .then(() => { }) // Get all animals
-                                }>Discharge</button>
+                                ? <button className="btn btn-warning mt-3 form-control small" onClick={() => {
+                                    AnimalOwnerRepository.removeOwnersAndCaretakers(currentAnimal.id)
+                                        .then(() => { AnimalRepository.delete(currentAnimal.id);})
+                                        .then(() => { history.push("/animals");})
+                                }}> Discharge</button>
                                 : ""
-                        }
+                               }
 
-                        {
-                            isEmployee //ternary statement to check if the user is an employee, if they are then render the treatment input instructions, if not display an empty string
-                                ? <label htmlFor="treatmentInstructions">Enter treatment description:</label> : ""
-                        }
-                        {
-                            isEmployee //ternary statement to check if the user is an employee, if they are then render the text area input box
-                                ?
-                                <input className="textArea"
-                                    onChange={
-                                        (evt) => {
-                                            //creates a copy of animal state
-                                            const copy = { ...description }
-                                            copy.description = evt.target.value
-                                            updateDescription(copy)
-                                        }
+
+                    {
+                        isEmployee //ternary statement to check if the user is an employee, if they are then render the treatment input instructions, if not display an empty string
+                            ? <label htmlFor="treatmentInstructions">Enter treatment description:</label> : ""
+                    }
+                    {
+                        isEmployee //ternary statement to check if the user is an employee, if they are then render the text area input box
+                            ?
+                            <input className="textArea"
+                                onChange={
+                                    (evt) => {
+                                        //creates a copy of animal state
+                                        const copy = { ...description }
+                                        copy.description = evt.target.value
+                                        updateDescription(copy)
                                     }
-                                >
-                                </input>
-                                : ""
-                        }{isEmployee ? <button onClick={saveTreatment}>Submit Treatment</button> : ""}
-                    </details>
-                </div>
-            </li>
+                                }
+                            >
+                            </input>
+                            : ""
+                    }{isEmployee ? <button onClick={saveTreatment}>Submit Treatment</button> : ""}
+                </details>
+            </div>
+        </li>
         </>
     )
 }
