@@ -44,25 +44,7 @@ export default ({ employee }) => {
     }, [resource])
     
     const saveLocation = (event) => {
-        
-        const savedLocation = {
-            userId: parseInt(employeeId),
-            locationId: parseInt(event.target.value)
-            
-        }
-        
-        const fetchOption = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(savedLocation)
-        }
-        
-        return fetch("http://localhost:8088/employeeLocations", fetchOption)
-        .then(() => {
-             history.push(`/employees/${resource.id}`)
-        })
+        EmployeeRepository.assignEmployee(parseInt(event.target.value), parseInt(employeeId)).then(EmployeeRepository.getAll)
     }
     return (
         <article className={classes}>
@@ -89,7 +71,7 @@ export default ({ employee }) => {
                                 Caring for {animalCount} animals
                             </section>
                             <section>   
-                                Working at -- location
+                                Working at {location?.name} location
                             </section>
                         </>
                         : ""

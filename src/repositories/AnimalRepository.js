@@ -62,26 +62,6 @@ export default {
             JSON.stringify(editedAnimal)
         )
     },
-//     async postCaretaker = (event) => {
-//         const caretaker = {
-//             userId: parseInt(event.target.value),
-//             animalId: currentAnimal?.id
-//         }
-//         const fetchOption = {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json"
-//             },
-//             body: JSON.stringify(caretaker)
-//         }
-//         return fetch("http://localhost:8088/animalCaretakers", fetchOption)
-            
-//                 .then(
-//                     // history.push("/animals")
-//                     syncAnimals)
-            
-//     }
-//  }
 
 async assignCaretaker(animalId, userId) {
     const e = await fetch(`${Settings.remoteURL}/animalCaretakers`, {
@@ -93,4 +73,16 @@ async assignCaretaker(animalId, userId) {
         "body": JSON.stringify({ animalId, userId })
     })
     return await e.json()
+},
+async saveTreatment(animalId, description, timestamp) {
+    const e = await fetch(`${Settings.remoteURL}/treatments`, {
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("kennel_token")}`
+        },
+        "body": JSON.stringify({ animalId, description, timestamp })
+    })
+    return await e.json()
 }}
+

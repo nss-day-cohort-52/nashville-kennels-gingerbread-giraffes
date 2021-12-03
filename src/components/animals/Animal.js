@@ -85,27 +85,12 @@ export const Animal = ({ animal, syncAnimals,
     let ownerArray = currentAnimal?.animalOwners?.map(owner => owner.user.name).join(", ")
     //created a saveTreatment function to capture the user input from the textfield and post it to our treatments array in our database 
     // it also rerenders the animals page once the function is called with history.push
-    const saveTreatment = (evt) => {
-        evt.preventDefault()
-
-        const savedTreatment = {
-            description: description.description,
-            animalId: currentAnimal?.id,
-            timestamp: new Date().getTime(),
-        }
-
-        const fetchOption = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(savedTreatment)
-        }
-
-        return fetch("http://localhost:8088/treatments", fetchOption)
-            .then(() => {
-                history.push("/animals")
-            })
+    const setTreatment = (event) => {
+        AnimalRepository.saveTreatment(
+            currentAnimal?.id,
+            description.description,
+            new Date().getTime(),
+        ).then(syncAnimals)
     }
     const saveOwner = (event) => {
         AnimalOwnerRepository.assignOwner(
@@ -232,7 +217,7 @@ export const Animal = ({ animal, syncAnimals,
 
                                 }}> Discharge</button>
                                 : ""
-                               }
+                        }
 
 
                         {
@@ -252,14 +237,14 @@ export const Animal = ({ animal, syncAnimals,
                                         }
 
                                     }
-                                }
-                            >
-                            </input>
-                            : ""
-                    }{isEmployee ? <button onClick={saveTreatment}>Submit Treatment</button> : ""}
-                </details>
-            </div>
-        </li>
+
+                                >
+                                </input>
+                                : ""
+                        }{isEmployee ? <button onClick={setTreatment}>Submit Treatment</button> : ""}
+                    </details>
+                </div>
+            </li>
         </>
     )
 }
