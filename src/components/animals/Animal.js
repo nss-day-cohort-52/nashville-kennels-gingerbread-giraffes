@@ -234,6 +234,7 @@ export const Animal = ({ animal, syncAnimals,
                                             const copy = { ...description }
                                             copy.description = evt.target.value
                                             updateDescription(copy)
+<<<<<<< HEAD
                                         }
 
                                     }
@@ -245,6 +246,15 @@ export const Animal = ({ animal, syncAnimals,
                     </details>
                 </div>
             </li>
+=======
+                                        } } >
+                            </input>
+                            : ""
+                    }{isEmployee ? <button onClick={saveTreatment}>Submit Treatment</button> : ""}
+                </details>
+            </div>
+        </li>
+>>>>>>> 69c384bc619f11324e7684ee80e1b649220f835e
         </>
     )
 }
