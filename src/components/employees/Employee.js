@@ -15,7 +15,7 @@ export default ({ employee }) => {
     const [animalCount, setCount] = useState(0)
     const [location, markLocation] = useState({name:""})
     const [classes, defineClasses] = useState("card employee")
-    const { employeeId } = useParams()
+    const { employeeId, locationId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver() //
     const [allLocations, saveLocations] = useState([])
@@ -27,11 +27,11 @@ export default ({ employee }) => {
         }
         resolveResource(employee, employeeId, EmployeeRepository.get)
     }, [])
+ 
+
+
     
-    useEffect(() => {
-        LocationRepository.getAll()
-        .then(data => saveLocations(data))
-    }, [])
+   
     //Need to match the employee ID to the userId on each animal caretaker object and count the matches to store in a variable to be called in the JSX
     useEffect(() => {
         setCount(resource?.animals?.length)
@@ -41,9 +41,11 @@ export default ({ employee }) => {
         if (resource?.employeeLocations?.length > 0) {
             markLocation(resource?.employeeLocations[0])
         }
+        resolveResource(location, locationId, LocationRepository.get)
     }, [resource])
     
-    const saveLocation = (event) => {
+    const saveLocation = (event) => { 
+        debugger
         EmployeeRepository.assignEmployee(parseInt(event.target.value), parseInt(employeeId)).then(EmployeeRepository.getAll)
     }
     return (
@@ -71,7 +73,8 @@ export default ({ employee }) => {
                                 Caring for {animalCount} animals
                             </section>
                             <section>   
-                                Working at {location?.name} location
+                                {/* mapping through the locations array then accessing each individual location object to get the name */}
+                                Working at {resource?.locations?.map(location => location.location.name).join(", ")} location
                             </section>
                         </>
                         : ""

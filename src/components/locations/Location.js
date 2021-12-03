@@ -12,6 +12,7 @@ export default ({location}) => {
             <section className="card-body">
                 <img alt="Kennel location icon" src={locationImage} className="icon--location" />
                 <h5 className="card-title">
+                    {/* the link below makes the location names clickable and then routes to the individual location's page */}
                     <Link className="card-link"
                         to={{
                             pathname: `/locations/${location.id}`,
